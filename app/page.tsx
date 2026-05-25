@@ -1,13 +1,15 @@
-import { RulesSection } from "@/figmaTemplate/src/app/components/rules-section";
-import { WishlistSection } from "@/figmaTemplate/src/app/components/wishlist-section";
-import { PotluckSection } from "@/figmaTemplate/src/app/components/potluck-section";
+import { HeroCountdown } from "./components/hero-countdown";
+import { RulesSection } from "./components/rules-section";
+import { WishlistSection } from "./components/wishlist-section";
+import { PotluckSection } from "./components/potluck-section";
 
 export default function Home() {
   return (
-    <div>
+    <main className="flex-1">
+      <HeroCountdown />
       <RulesSection />
-      <WishlistSection />
-      <PotluckSection />
-    </div>
+      <WishlistSection readOnly={true} />
+      <PotluckSection readOnly={true} />
+    </main>
   );
 }

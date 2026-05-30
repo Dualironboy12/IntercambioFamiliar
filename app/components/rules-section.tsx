@@ -1,30 +1,30 @@
-import { Gift, DollarSign, Calendar, Heart } from "lucide-react";
+import { Gift, DollarSign, Calendar, Lock } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 
 const rules = [
   {
     icon: Gift,
-    title: "Gift Exchange",
+    title: "Sorteo de Participantes",
     description:
-      "Each family member draws a name and buys a thoughtful gift for that person.",
+      "Se realizara un sorteo entre los participantes para determinar quien debe regalar a quien.",
   },
   {
     icon: DollarSign,
-    title: "Budget Limit",
+    title: "Limite de presupuesto",
     description:
-      "Keep gifts within the $50 budget to ensure fairness and fun for everyone.",
+      "Este año el limite de presupuesto sera de $500.",
   },
   {
     icon: Calendar,
-    title: "Important Date",
+    title: "Fecha del Intercambio",
     description:
-      "Gifts must be wrapped and ready for exchange on Christmas Day, December 25th.",
+      "El intercambio se realizara el dia de navidad, 25 de diciembre.",
   },
   {
-    icon: Heart,
-    title: "Secret Until Revealed",
+    icon: Lock,
+    title: "Manten el secreto!",
     description:
-      "Keep your assigned person a secret until the big reveal on Christmas!",
+      "Asegurate de mantener el secreto de a quien le regalas hasta el dia del intercambio.",
   },
 ];
 
@@ -34,11 +34,10 @@ export function RulesSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl font-semibold text-foreground mb-4">
-            How It Works
+            Reglas del Intercambio
           </h2>
           <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-            Simple rules to make our gift exchange memorable and enjoyable for
-            the whole family.
+            Revisa las reglas para asegurar una experiencia divertida y justa para todos.
           </p>
         </div>
 

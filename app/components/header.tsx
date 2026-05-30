@@ -28,7 +28,7 @@ export function Header() {
               <span className="text-lg">🎄</span>
             </div>
             <h1 className="text-lg sm:text-xl text-primary-foreground font-semibold tracking-tight">
-              Family Christmas Exchange
+              Intercambio Familiar
             </h1>
           </Link>
 
@@ -43,7 +43,7 @@ export function Header() {
                     className="text-primary-foreground hover:bg-primary-foreground/10 rounded-xl"
                   >
                     <User className="w-4 h-4 mr-2" />
-                    Profile
+                    Perfil
                   </Button>
                 )}
                 <Button
@@ -52,7 +52,7 @@ export function Header() {
                   onClick={handleLogout}
                   className="text-primary-foreground hover:bg-primary-foreground/10 rounded-xl"
                 >
-                  Logout
+                  Cerrar Sesión
                 </Button>
               </>
             ) : (
@@ -63,14 +63,14 @@ export function Header() {
                   onClick={() => router.push("/login")}
                   className="text-primary-foreground hover:bg-primary-foreground/10 rounded-xl"
                 >
-                  Login
+                  Iniciar Sesión
                 </Button>
                 <Button
                   size="sm"
                   onClick={() => router.push("/signup")}
                   className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 rounded-xl"
                 >
-                  Sign Up
+                  Registrarse
                 </Button>
               </>
             )}

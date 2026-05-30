@@ -12,9 +12,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Refugio Invernal – Family Christmas Exchange 2026",
+  title: "Intercambio Familiar 2026",
   description:
-    "Our annual Family Christmas Exchange. View wishlists, coordinate the potluck, and count down to Christmas Day.",
+    "Pagina para nuestro intercambio familiar 2026.",
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html lang="es" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <AuthProvider>
           <Header />

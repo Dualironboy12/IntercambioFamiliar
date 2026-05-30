@@ -64,10 +64,10 @@ export function WishlistSection({ readOnly = false }: WishlistSectionProps) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl font-semibold text-foreground mb-4">
-            Family Wishlists
+            Lista de deseos
           </h2>
           <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-            Share your gift ideas to help your Secret Santa find the perfect present.
+            Comparte tus ideas de regalos para ayudar a los demas a encontrar el regalo perfecto para ti.
           </p>
         </div>
 

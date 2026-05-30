@@ -19,7 +19,6 @@ import { useAuth } from "../providers/auth-provider";
 interface PotluckItem {
   id: string;
   dish: string;
-  serves: string;
 }
 
 export function ProfilePage() {
@@ -36,7 +35,7 @@ export function ProfilePage() {
 
   const initialContributions: PotluckItem[] =
     userName === "Sarah"
-      ? [{ id: "1", dish: "Roasted Turkey", serves: "8-10" }]
+      ? [{ id: "1", dish: "Roasted Turkey" }]
       : [];
 
   const [contributions, setContributions] =
@@ -53,15 +52,11 @@ export function ProfilePage() {
 
   const handleAddContribution = () => {
     const dishInput = document.getElementById("new-dish") as HTMLInputElement;
-    const servesInput = document.getElementById(
-      "new-serves"
-    ) as HTMLInputElement;
 
     if (dishInput.value) {
       const newItem: PotluckItem = {
         id: Date.now().toString(),
         dish: dishInput.value,
-        serves: servesInput.value || "4",
       };
       setContributions([...contributions, newItem]);
       setIsAddingContribution(false);
@@ -214,9 +209,6 @@ export function ProfilePage() {
                         <TableHead className="text-foreground/70 font-semibold">
                           Dish
                         </TableHead>
-                        <TableHead className="text-foreground/70 font-semibold">
-                          Serves
-                        </TableHead>
                         <TableHead className="text-foreground/70 font-semibold w-20" />
                       </TableRow>
                     </TableHeader>
@@ -224,7 +216,7 @@ export function ProfilePage() {
                       {contributions.length === 0 && !isAddingContribution ? (
                         <TableRow>
                           <TableCell
-                            colSpan={3}
+                            colSpan={2}
                             className="text-center text-muted-foreground py-8"
                           >
                             No contributions yet. Click &quot;Add Dish&quot; to get
@@ -239,9 +231,6 @@ export function ProfilePage() {
                           >
                             <TableCell className="font-medium text-foreground">
                               {item.dish}
-                            </TableCell>
-                            <TableCell className="text-foreground/80">
-                              {item.serves}
                             </TableCell>
                             <TableCell>
                               <Button
@@ -264,13 +253,6 @@ export function ProfilePage() {
                             <Input
                               id="new-dish"
                               placeholder="Dish name"
-                              className="rounded-lg border-border"
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <Input
-                              id="new-serves"
-                              placeholder="Serves"
                               className="rounded-lg border-border"
                             />
                           </TableCell>

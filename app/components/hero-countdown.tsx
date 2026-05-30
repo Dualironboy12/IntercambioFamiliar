@@ -38,22 +38,22 @@ export function HeroCountdown() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-4xl mx-auto">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-primary-foreground mb-4 tracking-tight">
-            Refugio Invernal
+            Intercambio Familiar 2026
           </h2>
           <p className="text-lg sm:text-xl text-primary-foreground/80 mb-12">
-            Our Annual Family Christmas Exchange
+            Sitio oficial del intercambio familiar 2026.
           </p>
 
           <div className="bg-card/10 backdrop-blur-md rounded-3xl p-8 sm:p-12 border border-primary-foreground/10 shadow-2xl">
             <p className="text-sm sm:text-base text-primary-foreground/70 mb-6 uppercase tracking-wider">
-              Countdown to Christmas
+              Quedan
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
               {[
-                { label: "Days", value: timeLeft.days },
-                { label: "Hours", value: timeLeft.hours },
-                { label: "Minutes", value: timeLeft.minutes },
-                { label: "Seconds", value: timeLeft.seconds },
+                { label: "Dias", value: timeLeft.days },
+                { label: "Horas", value: timeLeft.hours },
+                { label: "Minutos", value: timeLeft.minutes },
+                { label: "Segundos", value: timeLeft.seconds },
               ].map((item) => (
                 <div key={item.label} className="flex flex-col items-center">
                   <div className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-accent mb-2 tabular-nums">
@@ -65,6 +65,9 @@ export function HeroCountdown() {
                 </div>
               ))}
             </div>
+            <p className="text-sm sm:text-base text-primary-foreground/70 mt-7 uppercase tracking-wider">
+              para el intercambio.
+            </p>
           </div>
         </div>
       </div>

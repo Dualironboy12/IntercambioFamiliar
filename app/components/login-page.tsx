@@ -22,10 +22,11 @@ export function LoginPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email && password) {
-      login(email);
-      router.push("/profile");
-    }
+    //if (email && password) {
+      //login(email);
+      //router.push("/profile");
+    //}
+    router.push("/profile");
   };
 
   return (
@@ -36,22 +37,22 @@ export function LoginPage() {
             🎄
           </div>
           <CardTitle className="text-2xl sm:text-3xl text-foreground">
-            Welcome Back
+            Iniciar sesión
           </CardTitle>
           <CardDescription className="text-muted-foreground">
-            Sign in to manage your Christmas exchange
+            Inicia sesion para ver tu lista de regalos y platos.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-foreground">
-                Email
+                Correo electrónico
               </Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="tu.correo@ejemplo.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="rounded-xl border-border"
@@ -60,7 +61,7 @@ export function LoginPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password" className="text-foreground">
-                Password
+                Contraseña
               </Label>
               <Input
                 id="password"
@@ -76,17 +77,17 @@ export function LoginPage() {
               type="submit"
               className="w-full bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl mt-6"
             >
-              Login
+              Iniciar sesión
             </Button>
           </form>
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
-              Don&apos;t have an account?{" "}
+              ¿No tienes una cuenta?{" "}
               <button
                 onClick={() => router.push("/signup")}
                 className="text-destructive hover:underline font-semibold"
               >
-                Sign up
+                Registrarse
               </button>
             </p>
           </div>

@@ -38,17 +38,17 @@ export function SignupPage() {
             🎄
           </div>
           <CardTitle className="text-2xl sm:text-3xl text-foreground">
-            Join the Exchange
+            Unirse al intercambio
           </CardTitle>
           <CardDescription className="text-muted-foreground">
-            Create an account to participate in the Christmas festivities
+            Crea una cuenta para participar en el intercambio.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name" className="text-foreground">
-                Full Name
+                Nombre
               </Label>
               <Input
                 id="name"
@@ -62,12 +62,12 @@ export function SignupPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="email" className="text-foreground">
-                Email
+                Correo electrónico
               </Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="tu.correo@ejemplo.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="rounded-xl border-border"
@@ -76,7 +76,7 @@ export function SignupPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password" className="text-foreground">
-                Password
+                Contraseña
               </Label>
               <Input
                 id="password"
@@ -90,7 +90,7 @@ export function SignupPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="confirm-password" className="text-foreground">
-                Confirm Password
+                Confirmar contraseña
               </Label>
               <Input
                 id="confirm-password"
@@ -106,17 +106,17 @@ export function SignupPage() {
               type="submit"
               className="w-full bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl mt-6"
             >
-              Sign Up
+              Registrarse
             </Button>
           </form>
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
-              Already have an account?{" "}
+              ¿Ya tienes una cuenta?{" "}
               <button
                 onClick={() => router.push("/login")}
                 className="text-destructive hover:underline font-semibold"
               >
-                Login
+                Iniciar sesión
               </button>
             </p>
           </div>

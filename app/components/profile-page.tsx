@@ -79,10 +79,10 @@ export function ProfilePage() {
               </div>
               <div>
                 <h1 className="text-2xl sm:text-3xl font-semibold text-foreground">
-                  Welcome Back, {userName}!
+                  Bienvenido, {userName}!
                 </h1>
                 <p className="text-muted-foreground text-sm sm:text-base mt-1">
-                  Manage your wishlist and potluck contributions
+                  Gestiona tu lista de regalos y platos.
                 </p>
               </div>
             </div>
@@ -90,18 +90,18 @@ export function ProfilePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-border">
               <div className="bg-muted/30 rounded-xl p-4">
                 <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                  Secret Santa
+                  Te toca dar el regalo a...
                 </h3>
                 <p className="text-xl sm:text-2xl font-semibold text-foreground">
-                  Not Assigned Yet
+                  Proximamente
                 </p>
               </div>
               <div className="bg-muted/30 rounded-xl p-4">
                 <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                  Days Until Christmas
+                  Dias hasta el intercambio
                 </h3>
                 <p className="text-xl sm:text-2xl font-semibold text-destructive">
-                  Coming Soon!
+                  Proximamente
                 </p>
               </div>
             </div>
@@ -113,18 +113,17 @@ export function ProfilePage() {
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-3xl sm:text-4xl font-semibold text-foreground mb-4">
-                My Wishlist
+                Mi lista de regalos
               </h2>
               <p className="text-base sm:text-lg text-muted-foreground">
-                Share your gift ideas with your Secret Santa
+                Comparte tus ideas de regalos para ayudar a los demas a encontrar el regalo perfecto para ti.
               </p>
             </div>
 
             <Card className="bg-card border-border rounded-2xl overflow-hidden shadow-lg">
               <CardHeader className="bg-primary/5 border-b border-border pb-4">
                 <CardTitle className="text-xl sm:text-2xl text-foreground flex items-center gap-2">
-                  <span className="text-2xl">🎁</span>
-                  {userName}&apos;s Wishlist
+                  Lista de regalos de {userName}
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
@@ -162,7 +161,7 @@ export function ProfilePage() {
                       onClick={() => setIsEditingWishlist(true)}
                       className="w-full rounded-xl border-primary/20 hover:border-primary hover:bg-primary/5"
                     >
-                      Edit Wishlist
+                      Editar lista de regalos
                     </Button>
                   </div>
                 )}
@@ -176,10 +175,10 @@ export function ProfilePage() {
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-3xl sm:text-4xl font-semibold text-foreground mb-4">
-                My Dinner Contributions
+                Mi contribución a la cena
               </h2>
               <p className="text-base sm:text-lg text-muted-foreground">
-                Manage what you&apos;re bringing to the Christmas dinner
+                Gestiona los platillos que traes a la cena.
               </p>
             </div>
 
@@ -187,8 +186,7 @@ export function ProfilePage() {
               <CardHeader className="bg-primary/5 border-b border-border">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-xl sm:text-2xl text-foreground flex items-center gap-2">
-                    <span className="text-2xl">🍽️</span>
-                    My Food Contributions
+                    Mis platillos
                   </CardTitle>
                   {!isAddingContribution && (
                     <Button
@@ -196,7 +194,7 @@ export function ProfilePage() {
                       className="bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl"
                     >
                       <Plus className="w-4 h-4 mr-2" />
-                      Add Dish
+                      Agregar platillo
                     </Button>
                   )}
                 </div>
@@ -207,7 +205,7 @@ export function ProfilePage() {
                     <TableHeader>
                       <TableRow className="border-b border-border hover:bg-transparent">
                         <TableHead className="text-foreground/70 font-semibold">
-                          Dish
+                          Platillos
                         </TableHead>
                         <TableHead className="text-foreground/70 font-semibold w-20" />
                       </TableRow>
@@ -219,8 +217,7 @@ export function ProfilePage() {
                             colSpan={2}
                             className="text-center text-muted-foreground py-8"
                           >
-                            No contributions yet. Click &quot;Add Dish&quot; to get
-                            started!
+                            Sin platillos aún. Haz clic en "Agregar platillo" para empezar.
                           </TableCell>
                         </TableRow>
                       ) : (

@@ -4,18 +4,18 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { SignupPage } from "../components/signup-page";
 import { useAuth } from "../providers/auth-provider";
+import { devSkipAuth } from "@/lib/dev-flags";
 
 export default function Signup() {
   const { isLoggedIn } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoggedIn) {
-      router.replace("/profile");
-    }
+    if (devSkipAuth || !isLoggedIn) return;
+    router.replace("/profile");
   }, [isLoggedIn, router]);
 
-  if (isLoggedIn) return null;
+  if (!devSkipAuth && isLoggedIn) return null;
 
   return (
     <main className="flex-1">

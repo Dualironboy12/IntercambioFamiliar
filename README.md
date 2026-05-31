@@ -266,18 +266,23 @@ The current client is a browser singleton using `createClient` from `@supabase/s
 {
   session: Session | null;
   isLoggedIn: boolean;
-  login: (email: string, password?: string) => void;
-  signup: (name: string, email: string, password?: string) => void;
+  login: (email: string, password: string) => Promise<{ error: string | null }>;
+  signup: (name: string, email: string, password: string) => Promise<{ error: string | null }>;
   logout: () => void;
+  deleteAccount: () => Promise<{ error: string | null }>;
   currentUser: { name: string } | null;
 }
 ```
 
-`isLoggedIn` is derived from `session`. `login` and `signup` are still no-ops pending Supabase auth wiring. `logout` calls `supabase.auth.signOut()` when not in dev mode.
+`isLoggedIn` is derived from `session`. `login` calls `supabase.auth.signInWithPassword` and syncs the session immediately on success. `signup` calls `supabase.auth.signUp` with `nombre` in user metadata (for the `handle_new_user` trigger) and syncs the session when Supabase returns one. `logout` calls `supabase.auth.signOut()` when not in dev mode.
+
+### Account deletion
+
+Users can delete their account from the profile page (**Borrar cuenta**). The flow calls the `delete_own_account()` RPC ([`supabase/migrations/20260601120000_delete_own_account.sql`](supabase/migrations/20260601120000_delete_own_account.sql)), which removes the current row from `auth.users` (cascading to `perfiles`, `wishlist`, `regalo`, and `platillos`), then signs out and clears the client session.
+
+Apply the migration to your Supabase project before testing deletion in production. With `NEXT_PUBLIC_DEV_SKIP_AUTH=true`, `deleteAccount` skips the RPC and only redirects home for UI testing.
 
 With `NEXT_PUBLIC_DEV_SKIP_AUTH=true`, the provider skips session listeners and serves mock values so auth pages can be styled without a real login (see [Temporary UI development mode](#temporary-ui-development-mode)).
-
-When implementing auth, wire `login` and `signup` to `supabase.auth.signInWithPassword` and `signUp` (with `nombre` metadata), and load profile data from `perfiles`.
 
 ### Conventions for AI assistants
 
@@ -291,19 +296,19 @@ When implementing auth, wire `login` and `signup` to `supabase.auth.signInWithPa
 | Area | Status |
 |------|--------|
 | Home UI (hero, rules, wishlist, potluck) | Built; uses **mock/hardcoded data** |
-| Auth pages UI (login, signup) | Built; **not wired to Supabase auth** |
-| AuthProvider | Session listener + stub API; `login`/`signup` not wired to Supabase yet |
+| Auth pages UI (login, signup) | Built; wired to Supabase via route pages |
+| AuthProvider | Session listener; `login` / `signup` / `logout` / `deleteAccount` implemented |
 | Database reads/writes from app | **Not implemented** |
 | Middleware / server-side route protection | None |
 | Secret Santa assignment | Placeholder on profile page |
+| Account deletion | Profile **Borrar cuenta** + `delete_own_account` RPC (migration required) |
 
 ## Next Steps
 
 Immediate development priorities:
 
-1. **Complete AuthProvider** — Expose `isLoggedIn`, `login`, `logout`, `signup`, and `currentUser`; wire to `supabase.auth.*` with `nombre` in signup metadata for the `handle_new_user` trigger.
-2. **Connect Wishlist section** — Fetch `wishlist` + `regalo` joined with `perfiles` for display names; enable owner CRUD on the profile page.
-3. **Connect Potluck section** — Fetch and manage `platillos`; RLS enforces owner-only writes.
-4. **Replace mock data on home page** — Load live wishlist and potluck data for authenticated users.
-5. **Polish UI** — Add loading and error states; align i18n (auth pages are currently in English; rest of app is Spanish).
-6. **Optional hardening** — Add Next.js middleware and `@supabase/ssr` for server-side session checks and protected routes.
+1. **Connect Wishlist section** — Fetch `wishlist` + `regalo` joined with `perfiles` for display names; enable owner CRUD on the profile page.
+2. **Connect Potluck section** — Fetch and manage `platillos`; RLS enforces owner-only writes.
+3. **Replace mock data on home page** — Load live wishlist and potluck data for authenticated users.
+4. **Polish UI** — Align i18n where needed; add loading states for data fetching on profile/home.
+5. **Optional hardening** — Add Next.js middleware and `@supabase/ssr` for server-side session checks and protected routes.

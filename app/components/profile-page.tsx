@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
@@ -22,8 +23,13 @@ interface PotluckItem {
 }
 
 export function ProfilePage() {
-  const { currentUser } = useAuth();
+  const router = useRouter();
+  const { currentUser, deleteAccount } = useAuth();
   const userName = currentUser?.name ?? "User";
+
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const initialWishlist =
     userName === "Sarah"
@@ -65,6 +71,25 @@ export function ProfilePage() {
 
   const handleDeleteContribution = (id: string) => {
     setContributions(contributions.filter((item) => item.id !== id));
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirm(false);
+    setDeleteError(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    setDeleteError(null);
+    setDeleteLoading(true);
+    const result = await deleteAccount();
+    setDeleteLoading(false);
+
+    if (result.error) {
+      setDeleteError(result.error);
+      return;
+    }
+
+    router.push("/");
   };
 
   return (
@@ -279,6 +304,59 @@ export function ProfilePage() {
                 </div>
               </CardContent>
             </Card>
+          </div>
+        </section>
+
+        {/* Danger zone — delete account */}
+        <section className="py-8 sm:py-12 border-t border-border mt-4">
+          <div className="max-w-4xl mx-auto">
+            <p className="text-sm font-semibold text-muted-foreground mb-2">
+              Zona de peligro
+            </p>
+            <p className="text-sm text-muted-foreground mb-6">
+              Eliminar tu cuenta borra de forma permanente tu perfil, lista de
+              regalos y platillos. Esta acción no se puede deshacer.
+            </p>
+
+            {deleteError && (
+              <p
+                role="alert"
+                className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3 mb-4"
+              >
+                {deleteError}
+              </p>
+            )}
+
+            {showDeleteConfirm ? (
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                  type="button"
+                  disabled={deleteLoading}
+                  onClick={handleConfirmDelete}
+                  className="bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl disabled:opacity-60"
+                >
+                  {deleteLoading ? "Eliminando cuenta…" : "Confirmar borrado"}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={deleteLoading}
+                  onClick={handleCancelDelete}
+                  className="rounded-xl"
+                >
+                  Cancelar
+                </Button>
+              </div>
+            ) : (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowDeleteConfirm(true)}
+                className="rounded-xl border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
+              >
+                Borrar cuenta
+              </Button>
+            )}
           </div>
         </section>
       </div>

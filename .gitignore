@@ -42,8 +42,11 @@ next-env.d.ts
 .aider*
 .idea*
 .idea/intercambio2026.iml
+
+#AI agent-based files
 AGENTS.md
 CLAUDE.md
+.agents/*
 
 #jetbrains and vscode-based IDEs
 .idea

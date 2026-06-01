@@ -51,7 +51,10 @@ export function MyWishlistEditor() {
   }, [userId]);
 
   useEffect(() => {
-    void loadWishlist();
+    const fetchWishlist = async () => {
+      await loadWishlist();
+    };
+    void fetchWishlist();
   }, [loadWishlist]);
 
   const handleAdd = async () => {

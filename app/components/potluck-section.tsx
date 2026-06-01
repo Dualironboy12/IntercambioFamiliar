@@ -91,7 +91,10 @@ export function PotluckSection({ scope = "all" }: PotluckSectionProps) {
   }, [isLoggedIn, isOwnScope, userId]);
 
   useEffect(() => {
-    void loadData();
+    const fetchData = async () => {
+      await loadData();
+    };
+    void fetchData();
   }, [loadData]);
 
   const handleAdd = async () => {

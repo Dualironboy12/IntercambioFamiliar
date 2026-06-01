@@ -49,7 +49,10 @@ export function WishlistSection() {
   }, [isLoggedIn]);
 
   useEffect(() => {
-    void loadWishlists();
+    const fetchWishlists = async () => {
+      await loadWishlists();
+    };
+    void fetchWishlists();
   }, [loadWishlists]);
 
   return (

@@ -4,12 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { useAuth } from "../providers/auth-provider";
+import { useCountdown } from "@/lib/event-date";
 import { MyWishlistEditor } from "./my-wishlist-editor";
 import { PotluckSection } from "./potluck-section";
 
 export function ProfilePage() {
   const router = useRouter();
   const { currentUser, deleteAccount } = useAuth();
+  const { days, hours, minutes, seconds } = useCountdown();
   const userName = currentUser?.name ?? "User";
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -60,15 +62,15 @@ export function ProfilePage() {
                   Te toca dar el regalo a...
                 </h3>
                 <p className="text-xl sm:text-2xl font-semibold text-foreground">
-                  Proximamente
+                  Próximamente
                 </p>
               </div>
               <div className="bg-muted/30 rounded-xl p-4">
                 <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                  Dias hasta el intercambio
+                  Días hasta el intercambio
                 </h3>
-                <p className="text-xl sm:text-2xl font-semibold text-destructive">
-                  Proximamente
+                <p className="text-xl sm:text-2xl font-semibold text-destructive tabular-nums">
+                  {String(days).padStart(2, "0")}d {String(hours).padStart(2, "0")}h {String(minutes).padStart(2, "0")}m {String(seconds).padStart(2, "0")}s
                 </p>
               </div>
             </div>

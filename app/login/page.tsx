@@ -4,7 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { LoginPage } from "../components/login-page";
 import { useAuth } from "../providers/auth-provider";
-import { devSkipAuth } from "@/lib/dev-flags";
+import { mapAuthError } from "@/lib/auth-errors";
 
 function validateLoginForm(email: string, password: string): string | null {
   const trimmedEmail = email.trim();
@@ -35,7 +35,7 @@ export default function Login() {
   const [validationError, setValidationError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (devSkipAuth || !isLoggedIn) return;
+    if (!isLoggedIn) return;
     router.replace("/profile");
   }, [isLoggedIn, router]);
 
@@ -55,14 +55,14 @@ export default function Login() {
     setLoading(false);
 
     if (result.error) {
-      setError(result.error);
+      setError(mapAuthError(result.error));
       return;
     }
 
     router.push("/profile");
   };
 
-  if (!devSkipAuth && isLoggedIn) return null;
+  if (isLoggedIn) return null;
 
   return (
     <main className="flex-1">

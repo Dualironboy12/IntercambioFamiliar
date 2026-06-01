@@ -1,5 +1,4 @@
 import { supabase } from "@/lib/supabaseClient";
-import { devSkipAuth } from "@/lib/dev-flags";
 import type { DataResult, FamilyPlatillo, PlatilloRow } from "@/lib/types";
 
 function getPerfilNombre(
@@ -13,10 +12,6 @@ function getPerfilNombre(
 }
 
 export async function fetchFamilyPlatillos(): Promise<DataResult<FamilyPlatillo[]>> {
-  if (devSkipAuth) {
-    return { data: [], error: null };
-  }
-
   const { data, error } = await supabase
     .from("platillos")
     .select(
@@ -45,10 +40,6 @@ export async function fetchFamilyPlatillos(): Promise<DataResult<FamilyPlatillo[
 export async function fetchMyPlatillos(
   perfilId: string
 ): Promise<DataResult<PlatilloRow[]>> {
-  if (devSkipAuth) {
-    return { data: [], error: null };
-  }
-
   const { data, error } = await supabase
     .from("platillos")
     .select("platillo_id, descripcion_platillo, perfil_id")
@@ -66,10 +57,6 @@ export async function addPlatillo(
   perfilId: string,
   descripcion: string
 ): Promise<DataResult<PlatilloRow | null>> {
-  if (devSkipAuth) {
-    return { data: null, error: "Inicia sesión real para agregar platillos." };
-  }
-
   const trimmed = descripcion.trim();
   if (!trimmed) {
     return { data: null, error: "La descripción del platillo es obligatoria." };
@@ -89,10 +76,6 @@ export async function addPlatillo(
 }
 
 export async function deletePlatillo(platilloId: string): Promise<DataResult<null>> {
-  if (devSkipAuth) {
-    return { data: null, error: "Inicia sesión real para eliminar platillos." };
-  }
-
   const { error } = await supabase
     .from("platillos")
     .delete()

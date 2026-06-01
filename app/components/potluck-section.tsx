@@ -20,7 +20,6 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Plus, Trash2 } from "lucide-react";
 import { useAuth } from "../providers/auth-provider";
-import { devSkipAuth } from "@/lib/dev-flags";
 import {
   addPlatillo,
   deletePlatillo,
@@ -129,7 +128,7 @@ export function PotluckSection({ scope = "all" }: PotluckSectionProps) {
     void loadData();
   };
 
-  const showLoginPrompt = !isLoggedIn || (isOwnScope && !userId && !devSkipAuth);
+  const showLoginPrompt = !isLoggedIn || (isOwnScope && !userId);
 
   const tableRows = isOwnScope
     ? ownItems.map((item) => ({
@@ -144,10 +143,10 @@ export function PotluckSection({ scope = "all" }: PotluckSectionProps) {
       }));
 
   const sectionTitle = isOwnScope ? "Mis platillos" : "Platillos";
-  const headerTitle = isOwnScope ? "Mi contribución a la cena" : "Menu de la cena de Navidad";
+  const headerTitle = isOwnScope ? "Mi contribución a la cena" : "Menú de la cena de Navidad";
   const headerDescription = isOwnScope
     ? "Gestiona los platillos que traes a la cena."
-    : "Aqui puedes encontrar los platillos que serviremos el dia del intercambio y cena, todos pueden colaborar con un platillo!";
+    : "Aquí puedes encontrar los platillos que serviremos el día del intercambio y cena, ¡todos pueden colaborar con un platillo!";
 
   return (
     <section className={isOwnScope ? "py-8 sm:py-12" : "py-16 sm:py-20 lg:py-24"}>
@@ -175,14 +174,7 @@ export function PotluckSection({ scope = "all" }: PotluckSectionProps) {
         )}
 
         {showLoginPrompt ? (
-          isOwnScope && devSkipAuth ? (
-            <p className="text-center text-muted-foreground px-4">
-              Modo desarrollo: desactiva NEXT_PUBLIC_DEV_SKIP_AUTH para gestionar
-              platillos con una sesión real.
-            </p>
-          ) : (
-            <LoginPrompt />
-          )
+          <LoginPrompt />
         ) : (
           <Card
             className={`bg-card border-border rounded-2xl shadow-xl overflow-hidden ${isOwnScope ? "" : "max-w-4xl mx-auto"}`}
@@ -208,19 +200,22 @@ export function PotluckSection({ scope = "all" }: PotluckSectionProps) {
             </CardHeader>
             <CardContent className="p-0">
               {error && (
-                <p
+                <div
                   role="alert"
-                  className="text-sm text-destructive bg-destructive/10 border-b border-destructive/20 px-4 py-3"
+                  className="text-sm text-destructive bg-destructive/10 border-b border-destructive/20 px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3"
                 >
-                  {error}
-                </p>
-              )}
-
-              {devSkipAuth && !isOwnScope && (
-                <p className="text-sm text-muted-foreground px-4 py-3 border-b border-border">
-                  Modo desarrollo: desactiva NEXT_PUBLIC_DEV_SKIP_AUTH para cargar
-                  datos reales.
-                </p>
+                  <span>{error}</span>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    disabled={loading || submitting}
+                    onClick={() => void loadData()}
+                    className="rounded-xl border-destructive/30 text-destructive hover:bg-destructive/10 shrink-0"
+                  >
+                    Reintentar
+                  </Button>
+                </div>
               )}
 
               <div className="overflow-x-auto">

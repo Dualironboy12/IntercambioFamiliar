@@ -1,37 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCountdown } from "@/lib/event-date";
 
 export function HeroCountdown() {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  useEffect(() => {
-    const targetDate = new Date("2026-12-25T00:00:00");
-
-    const updateCountdown = () => {
-      const now = new Date();
-      const difference = targetDate.getTime() - now.getTime();
-
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        });
-      }
-    };
-
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const timeLeft = useCountdown();
 
   return (
     <section className="relative py-16 sm:py-24 lg:py-32 bg-gradient-to-b from-primary to-primary/90">
@@ -50,7 +22,7 @@ export function HeroCountdown() {
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
               {[
-                { label: "Dias", value: timeLeft.days },
+                { label: "Días", value: timeLeft.days },
                 { label: "Horas", value: timeLeft.hours },
                 { label: "Minutos", value: timeLeft.minutes },
                 { label: "Segundos", value: timeLeft.seconds },

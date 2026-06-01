@@ -27,6 +27,7 @@ roadmap_to_deployment_79cd07de.plan.md
 CLAUDE.md
 .agents/*
 .claude/*
+.junie/*
 
 # Mac-specific files
 .DS_Store

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { useAuth } from "../providers/auth-provider";
-import { devSkipAuth } from "@/lib/dev-flags";
 import { fetchFamilyWishlists } from "@/lib/wishlist-data";
 import type { FamilyWishlist } from "@/lib/types";
 
@@ -73,19 +72,22 @@ export function WishlistSection() {
         ) : (
           <>
             {error && (
-              <p
+              <div
                 role="alert"
-                className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3 mb-8 max-w-2xl mx-auto text-center"
+                className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3 mb-8 max-w-2xl mx-auto text-center flex flex-col sm:flex-row items-center justify-center gap-3"
               >
-                {error}
-              </p>
-            )}
-
-            {devSkipAuth && (
-              <p className="text-sm text-muted-foreground text-center mb-8">
-                Modo desarrollo: desactiva NEXT_PUBLIC_DEV_SKIP_AUTH para cargar
-                datos reales.
-              </p>
+                <span>{error}</span>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  disabled={loading}
+                  onClick={() => void loadWishlists()}
+                  className="rounded-xl border-destructive/30 text-destructive hover:bg-destructive/10"
+                >
+                  Reintentar
+                </Button>
+              </div>
             )}
 
             {loading ? (

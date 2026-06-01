@@ -1,5 +1,4 @@
 import { supabase } from "@/lib/supabaseClient";
-import { devSkipAuth } from "@/lib/dev-flags";
 import type { DataResult, FamilyWishlist, MyWishlistData, RegaloRow } from "@/lib/types";
 
 function getPerfilNombre(
@@ -13,9 +12,6 @@ function getPerfilNombre(
 }
 
 export async function fetchFamilyWishlists(): Promise<DataResult<FamilyWishlist[]>> {
-  if (devSkipAuth) {
-    return { data: [], error: null };
-  }
 
   const { data, error } = await supabase
     .from("wishlist")
@@ -46,9 +42,6 @@ export async function fetchFamilyWishlists(): Promise<DataResult<FamilyWishlist[
 export async function fetchMyWishlist(
   perfilId: string
 ): Promise<DataResult<MyWishlistData | null>> {
-  if (devSkipAuth) {
-    return { data: null, error: null };
-  }
 
   const { data: wishlist, error: wishlistError } = await supabase
     .from("wishlist")
@@ -83,9 +76,6 @@ export async function addRegalo(
   wishlistId: string,
   descripcion: string
 ): Promise<DataResult<RegaloRow | null>> {
-  if (devSkipAuth) {
-    return { data: null, error: "Inicia sesión real para agregar regalos." };
-  }
 
   const trimmed = descripcion.trim();
   if (!trimmed) {
@@ -106,9 +96,6 @@ export async function addRegalo(
 }
 
 export async function deleteRegalo(regaloId: string): Promise<DataResult<null>> {
-  if (devSkipAuth) {
-    return { data: null, error: "Inicia sesión real para eliminar regalos." };
-  }
 
   const { error } = await supabase.from("regalo").delete().eq("regalo_id", regaloId);
 
@@ -117,4 +104,27 @@ export async function deleteRegalo(regaloId: string): Promise<DataResult<null>> 
   }
 
   return { data: null, error: null };
+}
+
+export async function updateRegalo(
+  regaloId: string,
+  newDescripcion: string
+): Promise<DataResult<RegaloRow | null>> {
+  const trimmed = newDescripcion.trim();
+  if (!trimmed) {
+    return { data: null, error: "La descripción del regalo es obligatoria." };
+  }
+
+  const { data, error } = await supabase
+    .from("regalo")
+    .update({ descripcion_regalo: trimmed })
+    .eq("regalo_id", regaloId)
+    .select("regalo_id, descripcion_regalo")
+    .single();
+
+  if (error) {
+    return { data: null, error: error.message };
+  }
+
+  return { data: data as RegaloRow, error: null };
 }

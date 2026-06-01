@@ -6,25 +6,25 @@ const rules = [
     icon: Gift,
     title: "Sorteo de Participantes",
     description:
-      "Se realizara un sorteo entre los participantes para determinar quien debe regalar a quien.",
+      "Se realizará un sorteo entre los participantes para determinar quién debe regalar a quién.",
   },
   {
     icon: DollarSign,
-    title: "Limite de presupuesto",
+    title: "Límite de presupuesto",
     description:
-      "Este año el limite de presupuesto sera de $500.",
+      "Este año el límite de presupuesto será de $500.",
   },
   {
     icon: Calendar,
     title: "Fecha del Intercambio",
     description:
-      "El intercambio se realizara el dia de navidad, 25 de diciembre.",
+      "El intercambio se realizará el día de navidad, 25 de diciembre.",
   },
   {
     icon: Lock,
-    title: "Manten el secreto!",
+    title: "¡Mantén el secreto!",
     description:
-      "Asegurate de mantener el secreto de a quien le regalas hasta el dia del intercambio.",
+      "Asegúrate de mantener el secreto de a quién le regalas hasta el día del intercambio.",
   },
 ];
 

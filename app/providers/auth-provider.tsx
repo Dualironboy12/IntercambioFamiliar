@@ -9,7 +9,6 @@ import {
   useState,
 } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { devSkipAuth } from "@/lib/dev-flags";
 import { Session } from "@supabase/supabase-js";
 
 export type AuthUser = {
@@ -60,7 +59,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    if (devSkipAuth) return;
 
     supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
 
@@ -75,9 +73,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = useCallback(
     async (email: string, password: string): Promise<AuthLoginResult> => {
-      if (devSkipAuth) {
-        return { error: null };
-      }
 
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
@@ -99,9 +94,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signup = useCallback(
     async (name: string, email: string, password: string): Promise<AuthSignupResult> => {
-      if (devSkipAuth) {
-        return { error: null };
-      }
 
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -125,14 +117,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   const logout = useCallback(() => {
-    if (devSkipAuth) return;
     void supabase.auth.signOut();
   }, []);
 
   const deleteAccount = useCallback(async (): Promise<AuthDeleteAccountResult> => {
-    if (devSkipAuth) {
-      return { error: null };
-    }
 
     const { error } = await supabase.rpc("delete_own_account");
 
@@ -147,19 +135,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const value = useMemo<AuthContextValue>(() => {
-    if (devSkipAuth) {
-      return {
-        session: null,
-        userId: null,
-        isLoggedIn: false,
-        login,
-        signup,
-        logout,
-        deleteAccount,
-        currentUser: { name: "Usuario Demo" },
-      };
-    }
-
     const currentUser = session
       ? {
           name:

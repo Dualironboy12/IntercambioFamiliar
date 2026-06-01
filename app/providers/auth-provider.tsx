@@ -30,6 +30,7 @@ export type AuthDeleteAccountResult = {
 
 type AuthContextValue = {
   session: Session | null;
+  userId: string | null;
   isLoggedIn: boolean;
   login: (email: string, password: string) => Promise<AuthLoginResult>;
   signup: (
@@ -44,6 +45,7 @@ type AuthContextValue = {
 
 const defaultAuthContext: AuthContextValue = {
   session: null,
+  userId: null,
   isLoggedIn: false,
   login: async () => ({ error: null }),
   signup: async () => ({ error: null }),
@@ -148,6 +150,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (devSkipAuth) {
       return {
         session: null,
+        userId: null,
         isLoggedIn: false,
         login,
         signup,
@@ -168,6 +171,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     return {
       session,
+      userId: session?.user?.id ?? null,
       isLoggedIn: !!session,
       login,
       signup,

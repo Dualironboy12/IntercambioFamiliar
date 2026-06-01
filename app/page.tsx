@@ -8,8 +8,8 @@ export default function Home() {
     <main className="flex-1">
       <HeroCountdown />
       <RulesSection />
-      <WishlistSection readOnly={true} />
-      <PotluckSection readOnly={true} />
+      <WishlistSection />
+      <PotluckSection scope="all" />
     </main>
   );
 }

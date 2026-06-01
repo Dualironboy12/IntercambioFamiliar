@@ -271,10 +271,24 @@ The current client is a browser singleton using `createClient` from `@supabase/s
   logout: () => void;
   deleteAccount: () => Promise<{ error: string | null }>;
   currentUser: { name: string } | null;
+  userId: string | null;
 }
 ```
 
-`isLoggedIn` is derived from `session`. `login` calls `supabase.auth.signInWithPassword` and syncs the session immediately on success. `signup` calls `supabase.auth.signUp` with `nombre` in user metadata (for the `handle_new_user` trigger) and syncs the session when Supabase returns one. `logout` calls `supabase.auth.signOut()` when not in dev mode.
+`isLoggedIn` is derived from `session`. `userId` is `session.user.id` (same as `perfiles.id`). `login` calls `supabase.auth.signInWithPassword` and syncs the session immediately on success. `signup` calls `supabase.auth.signUp` with `nombre` in user metadata (for the `handle_new_user` trigger) and syncs the session when Supabase returns one. `logout` calls `supabase.auth.signOut()` when not in dev mode.
+
+### Wishlist and potluck data
+
+Gift ideas are stored as individual rows in `regalo` (not a single text field). Helpers live in [`lib/wishlist-data.ts`](lib/wishlist-data.ts) and [`lib/potluck-data.ts`](lib/potluck-data.ts).
+
+| Page | Gifts | Dishes |
+|------|-------|--------|
+| `/` (landing) | Read-only: all family wishlists | Read-only: all `platillos` |
+| `/profile` | Add/delete own `regalo` rows | Add/delete own `platillos` |
+
+**Landing lists require login** — RLS only grants SELECT to `authenticated` users. Guests see a sign-in CTA on the home page.
+
+Owner-only writes are enforced by RLS; the UI never exposes edit controls for other users' data on the landing page.
 
 ### Account deletion
 
@@ -295,10 +309,10 @@ With `NEXT_PUBLIC_DEV_SKIP_AUTH=true`, the provider skips session listeners and 
 
 | Area | Status |
 |------|--------|
-| Home UI (hero, rules, wishlist, potluck) | Built; uses **mock/hardcoded data** |
+| Home UI (hero, rules, wishlist, potluck) | Live data when logged in; login CTA for guests |
 | Auth pages UI (login, signup) | Built; wired to Supabase via route pages |
 | AuthProvider | Session listener; `login` / `signup` / `logout` / `deleteAccount` implemented |
-| Database reads/writes from app | **Not implemented** |
+| Profile wishlist / potluck CRUD | Connected via `regalo` and `platillos` tables |
 | Middleware / server-side route protection | None |
 | Secret Santa assignment | Placeholder on profile page |
 | Account deletion | Profile **Borrar cuenta** + `delete_own_account` RPC (migration required) |
@@ -307,8 +321,6 @@ With `NEXT_PUBLIC_DEV_SKIP_AUTH=true`, the provider skips session listeners and 
 
 Immediate development priorities:
 
-1. **Connect Wishlist section** — Fetch `wishlist` + `regalo` joined with `perfiles` for display names; enable owner CRUD on the profile page.
-2. **Connect Potluck section** — Fetch and manage `platillos`; RLS enforces owner-only writes.
-3. **Replace mock data on home page** — Load live wishlist and potluck data for authenticated users.
-4. **Polish UI** — Align i18n where needed; add loading states for data fetching on profile/home.
-5. **Optional hardening** — Add Next.js middleware and `@supabase/ssr` for server-side session checks and protected routes.
+1. **Polish UI** — Align i18n where needed; optional inline edit for existing `regalo` rows.
+2. **Secret Santa / countdown** — Replace "Proximamente" placeholders on profile.
+3. **Optional hardening** — Add Next.js middleware and `@supabase/ssr` for server-side session checks and protected routes.

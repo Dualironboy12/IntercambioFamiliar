@@ -49,7 +49,7 @@ function LoginPrompt() {
 }
 
 export function PotluckSection({ scope = "all" }: PotluckSectionProps) {
-  const { isLoggedIn, userId, currentUser } = useAuth();
+  const { isLoggedIn, isAuthLoading, userId, currentUser } = useAuth();
   const isOwnScope = scope === "own";
   const editable = isOwnScope && !!userId;
 
@@ -128,7 +128,8 @@ export function PotluckSection({ scope = "all" }: PotluckSectionProps) {
     void loadData();
   };
 
-  const showLoginPrompt = !isLoggedIn || (isOwnScope && !userId);
+  const showLoginPrompt = !isAuthLoading && (!isLoggedIn || (isOwnScope && !userId));
+  const showAuthLoading = isAuthLoading;
 
   const tableRows = isOwnScope
     ? ownItems.map((item) => ({
@@ -173,7 +174,9 @@ export function PotluckSection({ scope = "all" }: PotluckSectionProps) {
           </div>
         )}
 
-        {showLoginPrompt ? (
+        {showAuthLoading ? (
+          <p className="text-center text-muted-foreground py-12">Cargando sesión…</p>
+        ) : showLoginPrompt ? (
           <LoginPrompt />
         ) : (
           <Card

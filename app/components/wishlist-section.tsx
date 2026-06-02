@@ -25,7 +25,7 @@ function LoginPrompt() {
 }
 
 export function WishlistSection() {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isAuthLoading } = useAuth();
   const [members, setMembers] = useState<FamilyWishlist[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -67,7 +67,9 @@ export function WishlistSection() {
           </p>
         </div>
 
-        {!isLoggedIn ? (
+        {isAuthLoading ? (
+          <p className="text-center text-muted-foreground py-12">Cargando sesión…</p>
+        ) : !isLoggedIn ? (
           <LoginPrompt />
         ) : (
           <>

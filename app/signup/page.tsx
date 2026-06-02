@@ -43,7 +43,7 @@ function validateSignupForm(
 }
 
 export default function Signup() {
-  const { isLoggedIn, signup } = useAuth();
+  const { isLoggedIn, isAuthLoading, signup } = useAuth();
   const router = useRouter();
 
   const [name, setName] = useState("");
@@ -55,9 +55,10 @@ export default function Signup() {
   const [validationError, setValidationError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (isAuthLoading) return;
     if (!isLoggedIn) return;
     router.replace("/profile");
-  }, [isLoggedIn, router]);
+  }, [isLoggedIn, isAuthLoading, router]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -87,7 +88,7 @@ export default function Signup() {
     router.push("/profile");
   };
 
-  if (isLoggedIn) return null;
+  if (isAuthLoading || isLoggedIn) return null;
 
   return (
     <main className="flex-1">

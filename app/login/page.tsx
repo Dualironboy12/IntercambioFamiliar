@@ -25,7 +25,7 @@ function validateLoginForm(email: string, password: string): string | null {
 }
 
 export default function Login() {
-  const { isLoggedIn, login } = useAuth();
+  const { isLoggedIn, isAuthLoading, login } = useAuth();
   const router = useRouter();
 
   const [email, setEmail] = useState("");
@@ -35,9 +35,10 @@ export default function Login() {
   const [validationError, setValidationError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (isAuthLoading) return;
     if (!isLoggedIn) return;
     router.replace("/profile");
-  }, [isLoggedIn, router]);
+  }, [isLoggedIn, isAuthLoading, router]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,7 +63,7 @@ export default function Login() {
     router.push("/profile");
   };
 
-  if (isLoggedIn) return null;
+  if (isAuthLoading || isLoggedIn) return null;
 
   return (
     <main className="flex-1">

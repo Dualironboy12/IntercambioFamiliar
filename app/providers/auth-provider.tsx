@@ -31,6 +31,8 @@ type AuthContextValue = {
   session: Session | null;
   userId: string | null;
   isLoggedIn: boolean;
+  /** True until the initial getSession() call resolves — use to avoid flash of unauthenticated UI. */
+  isAuthLoading: boolean;
   login: (email: string, password: string) => Promise<AuthLoginResult>;
   signup: (
     name: string,
@@ -46,6 +48,7 @@ const defaultAuthContext: AuthContextValue = {
   session: null,
   userId: null,
   isLoggedIn: false,
+  isAuthLoading: true,
   login: async () => ({ error: null }),
   signup: async () => ({ error: null }),
   logout: () => {},
@@ -57,15 +60,20 @@ const AuthContext = createContext<AuthContextValue>(defaultAuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   useEffect(() => {
 
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setIsAuthLoading(false);
+    });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      setIsAuthLoading(false);
     });
 
     return () => subscription.unsubscribe();
@@ -148,13 +156,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       session,
       userId: session?.user?.id ?? null,
       isLoggedIn: !!session,
+      isAuthLoading,
       login,
       signup,
       logout,
       deleteAccount,
       currentUser,
     };
-  }, [session, login, signup, logout, deleteAccount]);
+  }, [session, isAuthLoading, login, signup, logout, deleteAccount]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

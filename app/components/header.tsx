@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "../providers/auth-provider";
 
 export function Header() {
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, isAuthLoading, logout } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -33,7 +33,11 @@ export function Header() {
           </Link>
 
           <div className="flex items-center gap-2">
-            {isLoggedIn ? (
+            {isAuthLoading ? (
+              <span className="text-sm text-primary-foreground/60">
+                Cargando sesión…
+              </span>
+            ) : isLoggedIn ? (
               <>
                 {pathname !== "/profile" && (
                   <Button

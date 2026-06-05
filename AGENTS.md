@@ -44,6 +44,7 @@ app/
     my-wishlist-editor.tsx   # User's own wishlist CRUD
     login-page.tsx           # Login form component
     signup-page.tsx          # Signup form component
+    confirm-email-page.tsx   # Post-signup email confirmation prompt
     ui/                      # Reusable UI primitives (button, card, input, etc.)
   providers/
     auth-provider.tsx        # Session context and auth state
@@ -65,7 +66,7 @@ supabase/
 |------|------|---------|
 | `/` | Public (lists require login) | Home — countdown, rules, read-only wishlist & potluck |
 | `/login` | Logged-out | User login; redirects to `/profile` when session confirmed |
-| `/signup` | Logged-out | User registration; redirects to `/profile` when session confirmed |
+| `/signup` | Logged-out | User registration; shows confirm-email screen when no session; redirects to `/profile` when session is issued immediately |
 | `/profile` | Required | Authenticated profile — edit wishlist & potluck |
 
 Route protection is **client-side only** (Option A). Each route page checks `isAuthLoading` before redirecting, preventing flash of unauthenticated UI. No `middleware.ts` or `@supabase/ssr` integration exists yet.
@@ -222,10 +223,13 @@ type AuthContextValue = {
 [`lib/auth-errors.ts`](lib/auth-errors.ts) maps Supabase English error messages to Spanish:
 
 ```typescript
-import { mapAuthError } from "@/lib/auth-errors";
+import { mapAuthError, ACCOUNT_NOT_FOUND_MESSAGE } from "@/lib/auth-errors";
 const userMessage = mapAuthError(rawSupabaseError);
-// "Invalid login credentials." → "Correo o contraseña incorrectos."
+// "Invalid login credentials." → ACCOUNT_NOT_FOUND_MESSAGE
+// ("No se encontró tu cuenta. Revisa tus datos o regístrate.")
 ```
+
+When login fails with invalid credentials, [`app/components/login-page.tsx`](app/components/login-page.tsx) detects `ACCOUNT_NOT_FOUND_MESSAGE` and renders "regístrate" as an inline button linking to `/signup` (the rest of the message stays plain text).
 
 ## Data Layer
 
@@ -271,7 +275,7 @@ Use absolute path aliases: `@/lib/...`, `@/app/...`. Do not use relative paths l
 |------|--------|
 | Home UI (hero, rules, wishlist, potluck) | Live data when logged in; login CTA for guests |
 | Auth loading state (`isAuthLoading`) | Header shows "Cargando sesión…"; route pages guard on loading |
-| Auth pages (login, signup) | Built; wired to Supabase; Spanish error mapping |
+| Auth pages (login, signup) | Built; wired to Supabase; Spanish error mapping; signup shows confirm-email screen when email confirmation is required |
 | AuthProvider | Session listener; `login`/`signup`/`logout`/`deleteAccount`/`isAuthLoading` |
 | Profile wishlist/potluck CRUD | Connected via `regalo` and `platillos` tables |
 | Account deletion | Profile button + `delete_own_account` RPC |

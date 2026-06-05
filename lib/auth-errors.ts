@@ -6,8 +6,11 @@
  * unchanged so unexpected errors are never hidden.
  */
 
+export const ACCOUNT_NOT_FOUND_MESSAGE =
+  "Correo electrónico o contraseña incorrectos. Revisa tus datos o regístrate.";
+
 const AUTH_ERROR_MAP: Record<string, string> = {
-  "Invalid login credentials.": "Correo o contraseña incorrectos.",
+  "Invalid login credentials": ACCOUNT_NOT_FOUND_MESSAGE,
   "Email not confirmed":
     "Tu correo aún no está confirmado. Revisa tu bandeja de entrada.",
   "A user with this email address has already been registered.":

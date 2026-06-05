@@ -12,6 +12,7 @@ import {
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
+import { ACCOUNT_NOT_FOUND_MESSAGE } from "@/lib/auth-errors";
 
 type LoginPageProps = {
   email: string;
@@ -58,7 +59,22 @@ export function LoginPage({
                 role="alert"
                 className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3"
               >
-                {displayError}
+                {displayError === ACCOUNT_NOT_FOUND_MESSAGE ? (
+                  <>
+                    Correo electrónico o contraseña incorrectos. Revisa tus datos o{" "}
+                    <button
+                      type="button"
+                      onClick={() => router.push("/signup")}
+                      className="underline font-semibold"
+                      disabled={loading}
+                    >
+                      regístrate
+                    </button>
+                    .
+                  </>
+                ) : (
+                  displayError
+                )}
               </p>
             )}
             <div className="space-y-2">

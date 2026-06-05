@@ -28,6 +28,7 @@ CLAUDE.md
 .agents/*
 .claude/*
 .junie/*
+.cursor/*
 
 # Mac-specific files
 .DS_Store

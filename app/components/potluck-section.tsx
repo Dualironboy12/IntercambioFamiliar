@@ -296,7 +296,7 @@ export function PotluckSection({ scope = "all" }: PotluckSectionProps) {
                           <Input
                             value={newDish}
                             onChange={(e) => setNewDish(e.target.value)}
-                            placeholder="Nombre del platillo"
+                            placeholder="Platillo"
                             className="rounded-lg border-border"
                             disabled={submitting}
                           />

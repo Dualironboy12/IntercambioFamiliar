@@ -15,8 +15,8 @@ export const metadata: Metadata = {
   title: "Intercambio Familiar 2026",
   description:
     "Pagina para nuestro intercambio familiar 2026.",
-robots: {
-index: false,
+  robots: {
+    index: false,
     follow: false,
 },
 };

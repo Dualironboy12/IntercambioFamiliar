@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { SignupPage } from "../components/signup-page";
+import { ConfirmEmailPage } from "../components/confirm-email-page";
 import { useAuth } from "../providers/auth-provider";
 import { mapAuthError } from "@/lib/auth-errors";
 
@@ -53,6 +54,7 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
     if (isAuthLoading) return;
@@ -85,27 +87,31 @@ export default function Signup() {
       return;
     }
 
-    router.push("/profile");
+    setShowConfirmation(true);
   };
 
   if (isAuthLoading || isLoggedIn) return null;
 
   return (
     <main className="flex-1">
-      <SignupPage
-        name={name}
-        email={email}
-        password={password}
-        confirmPassword={confirmPassword}
-        onNameChange={setName}
-        onEmailChange={setEmail}
-        onPasswordChange={setPassword}
-        onConfirmPasswordChange={setConfirmPassword}
-        loading={loading}
-        error={error}
-        validationError={validationError}
-        onSubmit={handleSubmit}
-      />
+      {showConfirmation ? (
+        <ConfirmEmailPage email={email.trim()} />
+      ) : (
+        <SignupPage
+          name={name}
+          email={email}
+          password={password}
+          confirmPassword={confirmPassword}
+          onNameChange={setName}
+          onEmailChange={setEmail}
+          onPasswordChange={setPassword}
+          onConfirmPasswordChange={setConfirmPassword}
+          loading={loading}
+          error={error}
+          validationError={validationError}
+          onSubmit={handleSubmit}
+        />
+      )}
     </main>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
+import { Mail } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -12,31 +13,62 @@ import {
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
-import { ACCOUNT_NOT_FOUND_MESSAGE } from "@/lib/auth-errors";
 
-type LoginPageProps = {
+type ForgotPasswordPageProps = {
   email: string;
-  password: string;
   onEmailChange: (value: string) => void;
-  onPasswordChange: (value: string) => void;
   loading: boolean;
   error: string | null;
   validationError: string | null;
+  submitted: boolean;
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
 };
 
-export function LoginPage({
+export function ForgotPasswordPage({
   email,
-  password,
   onEmailChange,
-  onPasswordChange,
   loading,
   error,
   validationError,
+  submitted,
   onSubmit,
-}: LoginPageProps) {
+}: ForgotPasswordPageProps) {
   const router = useRouter();
   const displayError = validationError ?? error;
+
+  if (submitted) {
+    return (
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-muted/30">
+        <Card className="w-full max-w-md bg-card border-border rounded-2xl shadow-xl">
+          <CardHeader className="space-y-1 text-center pb-6">
+            <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center mx-auto mb-4">
+              <Mail className="h-8 w-8 text-foreground" aria-hidden />
+            </div>
+            <CardTitle className="text-2xl sm:text-3xl text-foreground">
+              Revisa tu correo
+            </CardTitle>
+            <CardDescription className="text-muted-foreground">
+              Te enviamos un enlace para restablecer tu contraseña a{" "}
+              <span className="font-semibold text-foreground">{email.trim()}</span>.
+              Haz clic en él para crear una nueva contraseña.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <p className="text-sm text-muted-foreground text-center">
+              Si no ves el correo, revisa tu carpeta de spam.
+            </p>
+            <Button
+              type="button"
+              onClick={() => router.push("/login")}
+              className="w-full bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl"
+            >
+              Volver a iniciar sesión
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-muted/30">
@@ -46,10 +78,11 @@ export function LoginPage({
             🎄
           </div>
           <CardTitle className="text-2xl sm:text-3xl text-foreground">
-            Iniciar sesión
+            Recuperar contraseña
           </CardTitle>
           <CardDescription className="text-muted-foreground">
-            Inicia sesión para ver tu lista de regalos y platos.
+            Introduce tu correo y te enviaremos un enlace para restablecer tu
+            contraseña.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -59,22 +92,7 @@ export function LoginPage({
                 role="alert"
                 className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3"
               >
-                {displayError === ACCOUNT_NOT_FOUND_MESSAGE ? (
-                  <>
-                    Correo electrónico o contraseña incorrectos. Revisa tus datos o{" "}
-                    <button
-                      type="button"
-                      onClick={() => router.push("/signup")}
-                      className="underline font-semibold"
-                      disabled={loading}
-                    >
-                      regístrate
-                    </button>
-                    .
-                  </>
-                ) : (
-                  displayError
-                )}
+                {displayError}
               </p>
             )}
             <div className="space-y-2">
@@ -94,51 +112,24 @@ export function LoginPage({
                 disabled={loading}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-foreground">
-                Contraseña
-              </Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => onPasswordChange(e.target.value)}
-                className="rounded-xl border-border"
-                required
-                disabled={loading}
-              />
-              <div className="text-right">
-                <button
-                  type="button"
-                  onClick={() => router.push("/forgot-password")}
-                  className="text-sm text-destructive hover:underline font-semibold"
-                  disabled={loading}
-                >
-                  ¿Olvidaste tu contraseña?
-                </button>
-              </div>
-            </div>
             <Button
               type="submit"
               disabled={loading}
               className="w-full bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl mt-6 disabled:opacity-60"
             >
-              {loading ? "Iniciando sesión…" : "Iniciar sesión"}
+              {loading ? "Enviando…" : "Enviar enlace de recuperación"}
             </Button>
           </form>
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
-              ¿No tienes una cuenta?{" "}
+              ¿Recordaste tu contraseña?{" "}
               <button
                 type="button"
-                onClick={() => router.push("/signup")}
+                onClick={() => router.push("/login")}
                 className="text-destructive hover:underline font-semibold"
                 disabled={loading}
               >
-                Registrarse
+                Iniciar sesión
               </button>
             </p>
           </div>

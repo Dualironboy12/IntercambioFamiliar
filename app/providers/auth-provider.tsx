@@ -27,6 +27,14 @@ export type AuthDeleteAccountResult = {
   error: string | null;
 };
 
+export type AuthPasswordResetResult = {
+  error: string | null;
+};
+
+export type AuthUpdatePasswordResult = {
+  error: string | null;
+};
+
 type AuthContextValue = {
   session: Session | null;
   userId: string | null;
@@ -41,6 +49,8 @@ type AuthContextValue = {
   ) => Promise<AuthSignupResult>;
   logout: () => void;
   deleteAccount: () => Promise<AuthDeleteAccountResult>;
+  requestPasswordReset: (email: string) => Promise<AuthPasswordResetResult>;
+  updatePassword: (password: string) => Promise<AuthUpdatePasswordResult>;
   currentUser: AuthUser | null;
 };
 
@@ -53,6 +63,8 @@ const defaultAuthContext: AuthContextValue = {
   signup: async () => ({ error: null }),
   logout: () => {},
   deleteAccount: async () => ({ error: null }),
+  requestPasswordReset: async () => ({ error: null }),
+  updatePassword: async () => ({ error: null }),
   currentUser: null,
 };
 
@@ -142,6 +154,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return { error: null };
   }, []);
 
+  const requestPasswordReset = useCallback(
+    async (email: string): Promise<AuthPasswordResetResult> => {
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return { error: null };
+    },
+    []
+  );
+
+  const updatePassword = useCallback(
+    async (password: string): Promise<AuthUpdatePasswordResult> => {
+      const { error } = await supabase.auth.updateUser({ password });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return { error: null };
+    },
+    []
+  );
+
   const value = useMemo<AuthContextValue>(() => {
     const currentUser = session
       ? {
@@ -161,9 +201,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       signup,
       logout,
       deleteAccount,
+      requestPasswordReset,
+      updatePassword,
       currentUser,
     };
-  }, [session, isAuthLoading, login, signup, logout, deleteAccount]);
+  }, [
+    session,
+    isAuthLoading,
+    login,
+    signup,
+    logout,
+    deleteAccount,
+    requestPasswordReset,
+    updatePassword,
+  ]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

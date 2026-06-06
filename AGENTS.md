@@ -33,6 +33,8 @@ app/
   globals.css                # Tailwind v4 CSS-first config + theme tokens
   login/page.tsx             # Login route (client guard)
   signup/page.tsx            # Signup route (client guard)
+  forgot-password/page.tsx   # Request password reset email (client guard)
+  reset-password/page.tsx    # Set new password from recovery link
   profile/page.tsx           # Profile route (client guard)
   components/
     header.tsx               # Navigation, auth status, "Cargando sesión…"
@@ -45,6 +47,8 @@ app/
     login-page.tsx           # Login form component
     signup-page.tsx          # Signup form component
     confirm-email-page.tsx   # Post-signup email confirmation prompt
+    forgot-password-page.tsx # Request password reset form + email-sent success
+    reset-password-page.tsx  # New password form + invalid recovery link state
     ui/                      # Reusable UI primitives (button, card, input, etc.)
   providers/
     auth-provider.tsx        # Session context and auth state
@@ -67,6 +71,8 @@ supabase/
 | `/` | Public (lists require login) | Home — countdown, rules, read-only wishlist & potluck |
 | `/login` | Logged-out | User login; redirects to `/profile` when session confirmed |
 | `/signup` | Logged-out | User registration; shows confirm-email screen when no session; redirects to `/profile` when session is issued immediately |
+| `/forgot-password` | Logged-out | Request password reset email; shows "revisa tu correo" success state; redirects to `/profile` if already logged in |
+| `/reset-password` | Recovery session | Set new password via Supabase recovery link; redirects to `/profile` on success; shows invalid-link state when no session |
 | `/profile` | Required | Authenticated profile — edit wishlist & potluck |
 
 Route protection is **client-side only** (Option A). Each route page checks `isAuthLoading` before redirecting, preventing flash of unauthenticated UI. No `middleware.ts` or `@supabase/ssr` integration exists yet.
@@ -208,6 +214,8 @@ type AuthContextValue = {
   signup: (name, email, password) => Promise<{ error: string | null }>;
   logout: () => void;
   deleteAccount: () => Promise<{ error: string | null }>;
+  requestPasswordReset: (email) => Promise<{ error: string | null }>;
+  updatePassword: (password) => Promise<{ error: string | null }>;
   currentUser: { name: string } | null;
 };
 ```
@@ -217,6 +225,8 @@ type AuthContextValue = {
 - `signup` calls `signUp` with `nombre` in user metadata; syncs session when Supabase returns one.
 - `logout` calls `signOut()`.
 - `deleteAccount` calls the `delete_own_account` RPC then signs out.
+- `requestPasswordReset` calls `resetPasswordForEmail` with `redirectTo: ${origin}/reset-password`.
+- `updatePassword` calls `updateUser({ password })` after the user lands on `/reset-password` from the recovery email link.
 
 ### Error mapping
 
@@ -276,7 +286,8 @@ Use absolute path aliases: `@/lib/...`, `@/app/...`. Do not use relative paths l
 | Home UI (hero, rules, wishlist, potluck) | Live data when logged in; login CTA for guests |
 | Auth loading state (`isAuthLoading`) | Header shows "Cargando sesión…"; route pages guard on loading |
 | Auth pages (login, signup) | Built; wired to Supabase; Spanish error mapping; signup shows confirm-email screen when email confirmation is required |
-| AuthProvider | Session listener; `login`/`signup`/`logout`/`deleteAccount`/`isAuthLoading` |
+| Password recovery | `/forgot-password` + `/reset-password`; login links to forgot flow; recovery session via Supabase email link |
+| AuthProvider | Session listener; `login`/`signup`/`logout`/`deleteAccount`/`requestPasswordReset`/`updatePassword`/`isAuthLoading` |
 | Profile wishlist/potluck CRUD | Connected via `regalo` and `platillos` tables |
 | Account deletion | Profile button + `delete_own_account` RPC |
 | Profile countdown widget | Live countdown via `useCountdown()` |
@@ -291,6 +302,7 @@ Use absolute path aliases: `@/lib/...`, `@/app/...`. Do not use relative paths l
 - Supabase free tier pauses after 1 week of inactivity — ping the dashboard before the event.
 - Vercel Hobby (free) plan for deployment.
 - Environment variables: `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` only. No dev flags, no service-role key.
+- **Supabase Auth redirect URLs:** add `${origin}/reset-password` for both local dev (e.g. `http://localhost:3000/reset-password`) and the production domain in the Supabase dashboard under Authentication → URL Configuration.
 
 ## Out of Scope / Future Work
 

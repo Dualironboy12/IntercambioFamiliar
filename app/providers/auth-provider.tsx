@@ -120,6 +120,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         password,
         options: {
           data: { nombre: name.trim() },
+          emailRedirectTo: `${window.location.origin}/profile`,
         },
       });
 
